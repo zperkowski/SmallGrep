@@ -1,9 +1,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <string.h>
 
 int main(int argc, char const *argv[]) {
-  int i, file, patternSize;
+  int i, file, patternLength, lineLength;
   char const *pattern;
   int const BUFFOR_SIZE = 256;
   char buffor[BUFFOR_SIZE];
@@ -14,16 +15,21 @@ int main(int argc, char const *argv[]) {
     return(1);
   }
 
-  // Take pattern
+  // Take a pattern and lenght of the pattern
   pattern = argv[1];
-  patternSize = 0; // TODO Finding pattern size
+  patternLength = strlen(pattern);
 
   // Open file
   if (file = open(argv[2], O_RDONLY) == -1) {
     printf("File error!\n");
     return(3);
   }
-  // TODO Reading file and looking for the pattern
 
+  // Take every line from file
+  while ((lineLength = read(file, buffor, BUFFOR_SIZE)) > 0) {
+    // If pattern exists in the line, print this line
+    if (strstr(buffor, pattern) != NULL)
+      printf("%s\n", buffor);
+  }
   return(0);
 }
