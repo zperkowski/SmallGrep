@@ -4,7 +4,7 @@
 #include <string.h>
 
 int main(int argc, char const *argv[]) {
-  int i, file, patternLength, lineLength;
+  FILE *file;
   char const *pattern;
   int const BUFFOR_SIZE = 256;
   char buffor[BUFFOR_SIZE];
@@ -14,22 +14,21 @@ int main(int argc, char const *argv[]) {
     printf("Wrong number of arguments!\n");
     return(1);
   }
-
-  // Take a pattern and lenght of the pattern
+  // Take pattern
   pattern = argv[1];
-  patternLength = strlen(pattern);
-
+  
   // Open file
-  if (file = open(argv[2], O_RDONLY) == -1) {
+  if ((file = fopen(argv[2], "r")) == NULL) {
     printf("File error!\n");
     return(3);
   }
 
   // Take every line from file
-  while ((lineLength = read(file, buffor, BUFFOR_SIZE)) > 0) {
+  while (fgets(buffor, BUFFOR_SIZE, file)) {
     // If pattern exists in the line, print this line
     if (strstr(buffor, pattern) != NULL)
-      printf("%s\n", buffor);
+      printf("%s", buffor);
   }
+  fclose(file);
   return(0);
 }
